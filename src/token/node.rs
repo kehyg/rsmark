@@ -1,5 +1,9 @@
+use serde::Serialize;
+use std::fmt::Debug;
 
-#[derive(Debug)]
+use crate::token::Token;
+
+#[derive(Debug, PartialEq, Serialize)]
 pub enum NodeType {
     H1,
     H2,
@@ -8,23 +12,20 @@ pub enum NodeType {
     H5,
     H6,
     Paragraph,
+    BlockQuote,
+    Image,
     Text,
     Quote,
-    Image,
     Bold,
-    Link 
+    Link,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Range {
-  pub line: i32,
-  pub start: i32,
-  pub len: i32,
+    pub start: usize,
+    pub end: usize,
 }
 
-#[derive(Debug)]
-pub struct Node {
-  // pub text: String,
-  pub range: Range,
-  pub iden: NodeType,
+pub trait Node<'a>: Debug {
+    fn parser(&self, token: &Token<'a>) -> Vec<Token<'a>>;
 }
